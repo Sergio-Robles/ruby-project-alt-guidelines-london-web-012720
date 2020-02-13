@@ -267,7 +267,7 @@ class CommandLineInterface
             puts ""
 
             @all_orders.select do |o|
-                puts "A #{o.product.product_type} with an order ID  #{o.id}"
+                puts "A #{o.product.product_type} with an order ID  #{o.product.id}"
             end
           
 
@@ -275,25 +275,34 @@ class CommandLineInterface
         
             deleted_item = Order.all.find_by(id: gets.chomp.to_i)
 
+            if deleted_item 
+
             puts "#{@user_name}, are you sure you want to cancel your order of #{deleted_item.product.product_type}?"
             puts "Type 'Y' or 'N'"
-            answer = gets.chomp
+            else 
+                puts "Please insert a valid answer."
+            end
+            
+            answer = gets.chomp.to_s.upcase
 
             if answer == "N"
                 mainscreen
-            else
+            elsif answer == "Y"
                 deleted_item.destroy
-                @all_orders.reload
-                @all_products.reload
                 puts "Your #{deleted_item.product.product_type} has been successfully cancelled."
+                @all_orders.reload
+                @all_products.reload 
                 mainscreen
+            else
+                puts "Please insert a valid answer to proceed with the cancellation."
+                delete_user_order
 
             end
 
             puts "_________________________________________________________________________________"
 
         end
-            
+
     end   
 
     def list_of_tech
@@ -366,6 +375,9 @@ class CommandLineInterface
             insert_budget
         elsif input == 2
             mainscreen 
+        else 
+            puts "Please, insert valid number."
+            list_of_tech 
         end
 
     end
