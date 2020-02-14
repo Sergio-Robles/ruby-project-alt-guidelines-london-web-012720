@@ -353,11 +353,12 @@ class CommandLineInterface
                 puts "A #{o.product.product_type} with an order ID  #{o.id}.".colorize(:light_blue)
             end
         end
-          
-
+        
+        
         puts "_________________________________________________________________________________________________________________________"
         puts ""
-            deleted_item = Order.all.find_by(id: gets.chomp.to_i)
+        deleted_item = @all_orders.find_by(id: gets.chomp.to_i)
+        #binding.pry
         puts ""
         if deleted_item            
                 deleted_item.destroy
