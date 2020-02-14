@@ -27,6 +27,7 @@ class CommandLineInterface
     end
     
     def greet
+    
         puts "_________________________________________________________________________________________________________________________"
         puts "_________________________________________________________________________________________________________________________"
         puts ""
@@ -96,17 +97,19 @@ class CommandLineInterface
         when 2
             list_option
         when 3
-            update_order
+            update_order 
         when 4
-            delete_user_order
+            delete_user_order 
         when 5
-            list_of_tech
+            list_of_tech 
         when 6
-            menu
+            menu 
         when 7
+            pid = fork{ exec "afplay", "lib/soundfile/Ending.mp3" }
             exit
         else
-            puts "Insert valid option please try again.".colorize(:red)
+            puts "Insert valid option please try again.".colorize(:red) 
+            pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
             mainscreen
         end
         puts ""
@@ -116,6 +119,7 @@ class CommandLineInterface
     def create_username
         puts ""
         puts "Your name is not registered, please insert nickname to create a new user:".colorize(:red)
+        pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
         puts ""
         
         @user_name = gets.chomp.to_s
@@ -177,6 +181,7 @@ class CommandLineInterface
             return insert_budget
         else 
             puts "Enter a valid option please.".colorize(:red)
+            pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
             list_option
         end
             
@@ -189,11 +194,11 @@ class CommandLineInterface
         puts ""
         user_budget = gets.chomp.to_i
         puts ""
-        if user_budget > 0
+        if user_budget >= 100
             @product_budget = Product.all.select {|p|p.product_price <= user_budget}
             puts "_________________________________________________________________________________________________________________________"
             puts ""
-            puts "Yout budget allow you to buy:"
+            puts "Your budget allow you to buy:"
             puts "_________________________________________________________________________________________________________________________"
             puts ""
                 @product_budget.each_with_index do |p, i|
@@ -201,8 +206,11 @@ class CommandLineInterface
                     puts ""
                 end
         else 
-            puts "Insert correct amount, please:".colorize(:red)
-            insert_budget
+            puts ""
+            puts "You don't have budget to buy anything, get a job!!!".colorize(:red)
+            puts ""
+            pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
+            mainscreen
         end       
     
         create_product 
@@ -232,6 +240,7 @@ class CommandLineInterface
             puts "_________________________________________________________________________________________________________________________"
             puts ""
             puts "Your order has successfully been processed.".colorize(:green)
+            pid = fork{ exec "afplay", "lib/soundfile/purchase-succed-sound.mp3" }
             puts ""
             puts "_________________________________________________________________________________________________________________________"
             @all_products.reload
@@ -241,6 +250,7 @@ class CommandLineInterface
             puts "_________________________________________________________________________________________________________________________"
             puts ""
             puts "Please insert a correct number.".colorize(:red)
+            pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
             puts ""
             puts "_________________________________________________________________________________________________________________________"
             create_product
@@ -273,6 +283,7 @@ class CommandLineInterface
         if order_id_check.include?(order_id) == false
             puts ""
             puts "Wrong ID, your update has been cancelled.".colorize(:red)
+            pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
             puts ""
             mainscreen
         else
@@ -292,6 +303,7 @@ class CommandLineInterface
                 puts "_________________________________________________________________________________________________________________________"
                     puts ""
                     puts "Wrong ID, your update has been cancelled.".colorize(:red) 
+                    pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
                     puts ""
                     mainscreen 
             end
@@ -307,6 +319,7 @@ class CommandLineInterface
 
         puts ""
         puts "Your order has been updated successfully!".colorize(:green)
+        pid = fork{ exec "afplay", "lib/soundfile/purchase-succed-sound.mp3" }
         puts""
 
         puts "_________________________________________________________________________________________________________________________"
@@ -349,11 +362,13 @@ class CommandLineInterface
         if deleted_item            
                 deleted_item.destroy
                 puts "Your #{deleted_item.product.product_type} has been successfully cancelled.".colorize(:green)
+                pid = fork{ exec "afplay", "lib/soundfile/purchase-succed-sound.mp3" }
                 @all_orders.reload
                 @all_products.reload 
                 mainscreen
         else 
                 puts "Please insert a valid answer to proceed with the cancellation.".colorize(:red)
+                pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
                 delete_user_order
 
         end
@@ -437,6 +452,7 @@ class CommandLineInterface
             mainscreen 
         else 
             puts "Please, insert valid number.".colorize(:red)
+            pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
             list_of_tech 
         end
         puts ""
