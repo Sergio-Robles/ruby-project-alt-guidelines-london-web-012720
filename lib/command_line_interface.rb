@@ -318,6 +318,7 @@ class CommandLineInterface
             puts "Please enter your order ID to cancel:"
             puts ""
 
+
             @all_orders.select {|o| puts "A #{o.product.product_type} with an order ID  #{o.id}"}
             @deleted_item = Order.all.find_by(id: gets.chomp.to_i)
             delete_user_order2 
@@ -351,6 +352,7 @@ class CommandLineInterface
         puts "_________________________________________________________________________________"
 
     end
+
 
     def list_of_tech
 
@@ -426,6 +428,7 @@ class CommandLineInterface
         else 
             puts "invalid option please try again"
             list_of_tech
+
         end
 
     end
