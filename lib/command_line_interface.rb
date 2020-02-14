@@ -127,7 +127,7 @@ class CommandLineInterface
                 puts ""
                 puts "Sorry but that username is not valid."
                 puts ""
-                create_username
+                menu
             end
 
         puts "_________________________________________________________________________________________________________________________"
