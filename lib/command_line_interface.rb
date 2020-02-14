@@ -1,22 +1,55 @@
+require 'colorize'
+
 class CommandLineInterface
 
+    def title 
+    puts ""
+    puts ""
+    puts ""
+    puts "_________________________________________________________________________________________________________________________"
+    puts "_________________________________________________________________________________________________________________________"
+    puts ""
+    puts ""
+    puts ""
+    puts "
+            
+
+               ████████╗███████╗ ██████╗██╗  ██╗    ██╗  ██╗██╗   ██╗███╗   ██╗████████╗███████╗██████╗             
+               ╚══██╔══╝██╔════╝██╔════╝██║  ██║    ██║  ██║██║   ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗            
+   █████╗█████╗   ██║   █████╗  ██║     ███████║    ███████║██║   ██║██╔██╗ ██║   ██║   █████╗  ██████╔╝█████╗█████╗
+   ╚════╝╚════╝   ██║   ██╔══╝  ██║     ██╔══██║    ██╔══██║██║   ██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗╚════╝╚════╝
+                  ██║   ███████╗╚██████╗██║  ██║    ██║  ██║╚██████╔╝██║ ╚████║   ██║   ███████╗██║  ██║            
+                  ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝            
+                                                                                                             
+        ".colorize(:light_blue)
+    puts ""
+    puts ""
+    end
+    
     def greet
-        puts "________________"
-        puts "Welcome to Tech Hunter"
-        puts "________________"
+        puts "_________________________________________________________________________________________________________________________"
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        puts "                                            WELCOME TO TECH HUNTER ".colorize(:light_blue)
+        puts "_________________________________________________________________________________________________________________________"
+        
+
     end
 
     def menu
-        puts "________________"
-        puts "Insert the user name to continue:"
 
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        puts "Please insert the user name to continue:"
+        puts ""
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
         @user_name  = gets.chomp.to_s
 
-
         @user_instance = User.find_by(user_name: @user_name)
-      
-     
-        puts "________________"
+        puts ""
+        puts "_________________________________________________________________________________________________________________________"
+
         if  @user_instance 
 
             mainscreen
@@ -25,87 +58,104 @@ class CommandLineInterface
             create_username 
           
         end
-    end 
 
-    def create_username
-        puts "____________________________________________"
-
-        puts "Your name is not registered, please insert nickname to create a new user:"
-        
-        @user_name = gets.chomp.to_s
-
-        @user_instance = User.create(user_name: "#{@user_name}")
-        puts "____________________________________________"
-
-        menu
-    end
-
+    end   
 
     def mainscreen
 
         @all_orders = @user_instance.orders
-        @all_products  = @user_instance.products
-        puts "____________________________________________"
-        puts "Welcome back #{@user_name}"
-        puts "____________________________________________"
+        @all_products = @user_instance.products
+        
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+
+        puts "Welcome #{@user_name}! Nice to see you here.".colorize(:light_blue)
+        puts "_________________________________________________________________________________________________________________________"
         puts "
+
+
         What would you like to do?
 
         1. Order history
         2. Create a new order
         3. Update your order 
         4. Cancel your order
-        5. Catalogue
+        5. View the catalogue
         6. Go back to the login page
         7. Exit application
-        "
-        puts "____________________________________________"
+        "      
+        puts ""
+        puts ""
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
         
         mainscreen_options = gets.chomp.to_i
-
-        if  mainscreen_options == 1
+        case mainscreen_options
+        when 1
             order_history       
-
-        elsif mainscreen_options == 2
+        when 2
             list_option
-        elsif mainscreen_options == 3
+        when 3
             update_order
-        elsif mainscreen_options == 4
+        when 4
             delete_user_order
-        elsif mainscreen_options == 5
+        when 5
             list_of_tech
-        elsif mainscreen_options == 6
-
+        when 6
             menu
-        elsif mainscreen_options == 7
+        when 7
             exit
         else
-            puts "Insert valid option please try again."
+            puts "Insert valid option please try again.".colorize(:red)
             mainscreen
         end
+        puts ""
+    end
+
+
+    def create_username
+        puts ""
+        puts "Your name is not registered, please insert nickname to create a new user:".colorize(:red)
+        puts ""
+        
+        @user_name = gets.chomp.to_s
+            if @user_name.blank? 
+                puts ""
+                puts "Sorry but that username is not valid."
+                puts ""
+                create_username
+            end
+
+        puts "_________________________________________________________________________________________________________________________"
+
+        @user_instance = User.create(user_name: "#{@user_name}")
+
+        mainscreen
 
     end
 
 
     def order_history
 
-        puts "____________________________________________"
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+
         if @all_products.size <= 0 
-            puts "Your order list is empty."
-            puts "Press any key to go back to main menu."
+            puts ""
+            puts "Your order list is empty. Please read our catalogue on the main menu and create a new order.".colorize(:light_blue)
+            puts ""
+            # puts "Press any key to go back to main menu."
         else
-            
-             #@all_products = @user_instance.products
-             @all_products.map do |p|
-                # @deleted_item.destroy.save
-                puts "You have ordered a #{p.product_type}, for £#{p.product_price}."
-                puts""
-                
-                
+            @all_products.map do |p|
+            puts "You have ordered a #{p.product_type}, for £#{p.product_price}.".colorize(:light_blue)
+            puts""
             end
         end
-        puts "____________________________________________"
+
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
         puts "Press any key to go back to main menu."
+        puts ""
         order_sent_back = gets.chomp
         if order_sent_back
          mainscreen
@@ -115,192 +165,283 @@ class CommandLineInterface
 
     def list_option
         
-        puts "__________________________________________ "
-        puts "Press 1 to see our catalogue or 2 to insert budget:"
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        puts "Press 1 to see our catalogue or press 2 to insert budget:"
+        puts "_________________________________________________________________________________________________________________________"
+
         list = gets.chomp.to_i
-            if list == 1 
-                list_of_tech
-            elsif list == 2 
-                return insert_budget
-            else 
-                puts "Enter a valid option please."
-                list_option
-            end
+        if list == 1 
+            list_of_tech
+        elsif list == 2 
+            return insert_budget
+        else 
+            puts "Enter a valid option please.".colorize(:red)
+            list_option
+        end
             
     end
             
     def insert_budget
+        puts ""
         puts "Insert budget:"
-        puts "__________________________________________ "
-
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
         user_budget = gets.chomp.to_i
-        if user_budget > 0 
+        puts ""
+        if user_budget > 0
             @product_budget = Product.all.select {|p|p.product_price <= user_budget}
-                puts "Yout budget allow you to buy:"
-                puts "____________________________________________"
-            @product_budget.each_with_index do |p, i|
-                puts "#{i +=1}\t #{p.product_type}, which cost #{p.product_price} product ID #{p.id}"
-                puts ""
-            end
+            puts "_________________________________________________________________________________________________________________________"
+            puts ""
+            puts "Yout budget allow you to buy:"
+            puts "_________________________________________________________________________________________________________________________"
+            puts ""
+                @product_budget.each_with_index do |p, i|
+                    puts "#{p.product_type}, which cost #{p.product_price} product ID #{p.id}".colorize(:light_blue)
+                    puts ""
+                end
         else 
-                puts "Insert correct amount, please:"
-                insert_budget
+            puts "Insert correct amount, please:".colorize(:red)
+            insert_budget
         end       
-        
-
+    
         create_product 
+
     end
 
 
     def create_product
-        puts "__________________________________________"
-        puts"Select the ID of your chosen product"
-        puts""
+
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        puts "Select the ID of your chosen product"
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        
         user_choice = gets.chomp.to_i
 
-        p = Product.find_by(id: user_choice)#return instance of the product 
-         new_order =  Order.new(user_id: @user_instance.id, product_id: p.id, date: 2020).save
-         #@all_orders << new_order
-         #binding.pry
-         puts""
-        puts "You have selected #{p.product_type} which cost #{p.product_price}, your order 
-        has been processed successfully"
         puts ""
-        puts "__________________________________________"
-        @all_products.reload
+        num = Product.all.size
+        if user_choice.clamp(0, num)
+
+            p = Product.find_by(id: user_choice)#return instance of the product 
+            new_order = Order.new(user_id: @user_instance.id, product_id: p.id, date: 2020).save
+    
+            puts""
+            puts "You have selected #{p.product_type} which cost #{p.product_price}".colorize(:light_blue)
+            puts "_________________________________________________________________________________________________________________________"
+            puts ""
+            puts "Your order has successfully been processed.".colorize(:green)
+            puts ""
+            puts "_________________________________________________________________________________________________________________________"
+            @all_products.reload
+
         mainscreen 
+        else
+            puts "_________________________________________________________________________________________________________________________"
+            puts ""
+            puts "Please insert a correct number.".colorize(:red)
+            puts ""
+            puts "_________________________________________________________________________________________________________________________"
+            create_product
+        end
+
     end
 
 
 
     def update_order
-
-    
-                puts "what is in your cart"
-       
+        puts ""
+        puts "What is in your cart?"
+        puts ""
+        @all_orders.select do |o| 
+            puts "A #{o.product.product_type} with an order ID  of #{o.id}.".colorize(:light_blue)
+        end
         
-                    @all_orders.select do |o|
-                    puts "In your card there is #{o.product.product_type} with an order ID  #{o.id}"
-                    end
-            
-
-                puts "Please enter your product ID to update:"
-
-                order_id = gets.chomp.to_i#order_id_to_update
-
-            puts "choose another product "
-
-            Product.all.each {|p|puts "#{p.product_type} #{p.id}"}
-
-            puts"choose a new product by id "
-            product_id = gets.chomp.to_i#new_product_id
-            
-            o = @all_orders.find_by(id: order_id)
-           
-            o.update(product_id: product_id)
-            o.save
-
-            @all_orders.reload
-            
-            puts "Your order has been successfully updated!."
-
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        
+        puts "Please enter your product ID to update:" 
+        
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        
+        order_id = gets.chomp.to_i #order_id_to_update 
+        order_id_check = Order.all.map { |x| x.id}
+        puts ""
+        puts "_________________________________________________________________________________________________________________________"
+        if order_id_check.include?(order_id) == false
+            puts ""
+            puts "Wrong ID, your update has been cancelled.".colorize(:red)
+            puts ""
             mainscreen
+        else
+            puts ""
+            puts "Choose another product by ID from the list:" 
+            puts ""
+            
+            Product.all.each {|p|puts "Press #{p.id} ID for #{p.product_type}."} 
+            
+            puts ""
+            puts "_________________________________________________________________________________________________________________________"
+            puts ""
+            
+            product_id = gets.chomp.to_i #new_product_id
+            product_id_check = Order.all.map { |x| x.product_id}
+            if product_id_check.include?(product_id) == false
+                puts "_________________________________________________________________________________________________________________________"
+                    puts ""
+                    puts "Wrong ID, your update has been cancelled.".colorize(:red) 
+                    puts ""
+                    mainscreen 
+            end
+            o = @all_orders.find_by(id: order_id)
+            o.update(product_id: product_id)
+            o.save   
+        end
 
+
+
+        @all_products.reload
+        @all_orders.reload
+
+        puts ""
+        puts "Your order has been updated successfully!".colorize(:green)
+        puts""
+
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        puts "Press any key to go back to main menu."
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+
+        input = gets.chomp
+        if input 
+            mainscreen 
+        end
+        puts ""
     end
+    
 
 
 
     def delete_user_order
-
+        puts ""
         if @all_orders.size <= 0
-            puts "Your order list in empty. Have a look to our great catelogue!"
+            puts "You have no orders. Have a look to our catelogue!".colorize(:light_blue)
             mainscreen
         else
+            puts "_________________________________________________________________________________________________________________________"
+            puts ""
+            puts "Please enter your order ID to cancel:"
+            puts ""
 
-        puts "____________________________________________"
-
-        puts "Please enter your order to cancel:"
-          
-                @all_orders.each do |o|
-                    puts "In your card there is #{o.product.product_type} with a order ID #{o.id}"
+            @all_orders.select do |o|
+                puts "A #{o.product.product_type} with an order ID  #{o.id}.".colorize(:light_blue)
             end
+        end
+          
 
-        puts "____________________________________________"
-        
-        deleted_item = Order.all.find_by(id: gets.chomp.to_i)
-        
-        if deleted_item
-            deleted_item.destroy
-            @all_orders.reload
-            puts "Your order has been successfully deleted."
-            mainscreen
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+            deleted_item = Order.all.find_by(id: gets.chomp.to_i)
+        puts ""
+        if deleted_item            
+                deleted_item.destroy
+                puts "Your #{deleted_item.product.product_type} has been successfully cancelled.".colorize(:green)
+                @all_orders.reload
+                @all_products.reload 
+                mainscreen
         else 
-            puts "You dont have that item in your bag."
-            order_history
+                puts "Please insert a valid answer to proceed with the cancellation.".colorize(:red)
+                delete_user_order
+
         end
-            
-        puts "____________________________________________"
-        end
-            
-    end
-       
+            #I deleted the question Y/N because it was giving troubles with test validation.
+            puts "_________________________________________________________________________________________________________________________"
+            puts ""
+
+    end   
+
+
 
     def list_of_tech
+        puts ""
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        puts "Welcome to the catelogue!
 
-        puts "__________________________________________"
-       puts "__________________________________________"
-       puts "Welcome to the catelogue!
        1. Smart TV... £200
            Connect this TV to your internet and stream to your hearts
            content. Stream music and videos, browse the internet and view
            photos... the world is your oyster!
+
        2. Wireless speaker system... £100
            This wireless speaker system includes speakers for up to 5 rooms,
            these speakers can be paired and controlled from a mobile app
            creating a cool vibe all around the house.
+
        3. Thermostat... £300
            This super thermostat automatically regulates temperature. It
            can also be paired and controlled via a mobie app so you can turn
            the heating up just in time for when you get home!
+
        4. Home security system... £400
            Protect your home and your family with the security system.
            This includes high decibel alarms, CCTV, motione detectors,
            a control panel and more.
+
        5. Domestic... £500
            Forgot to feed your dog? Well that's not a problem with the
            Domestic2000! Give your dog a little pick me up or a treat for
            when you're missing him.
+
        6. Smoke/CO detector... £800
            Protect you and your family with this smoke and carbon monoxide
            detector. This fire-protection device automatically detects and
            gives warning when there is a presence of smoke.
+
        7. Lighting... £300
            The perfect modern chandelier to lilght up any room! Suitable for
            most rooms and it absolutely stunning. You can transform a room in
            seconds with this lighting.
+
        8. Doors... £200
            Made from quality solid oak, these doors are perfect for making
            the room feel complete.
+
        9. Laundry machine... £400
            Powerful washing machine and tumble drier combination, perfect for
            any busy household. Quick and reliable, your new best friend!
+
        10. Water detector... £700
            Detect the presence of water to provide an alert in time to prevent
            a serious water leak.
+
        11. Monitoring system... £100
            The perfect start-up CCTV kit for any home. This budget item is great
            if you just want that extra protection and monitoring whilst you're
-           away from your home."
-           puts "__________________________________________"
-           puts "Press any key to go back to main menu."
-            list_of_tech = gets.chomp
-            if list_of_tech 
-                mainscreen 
-            end
+           away from your home.
+           ".colorize(:light_blue)
 
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+        puts "Press 1 to make a purchase or press 2 to go back to the main menu."
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
+
+        input = gets.chomp.to_i
+        if input == 1
+            insert_budget
+        elsif input == 2
+            mainscreen 
+        else 
+            puts "Please, insert valid number.".colorize(:red)
+            list_of_tech 
+        end
+        puts ""
+        puts "_________________________________________________________________________________________________________________________"
+        puts ""
     end
 
 end
-
-
-
