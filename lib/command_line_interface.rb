@@ -148,7 +148,6 @@ class CommandLineInterface
             puts ""
             puts "Your order list is empty. Please read our catalogue on the main menu and create a new order.".colorize(:light_blue)
             puts ""
-            # puts "Press any key to go back to main menu."
         else
             @all_products.map do |p|
             puts "You have ordered a #{p.product_type}, for £#{p.product_price}.".colorize(:light_blue)
@@ -277,7 +276,7 @@ class CommandLineInterface
         puts ""
         
         order_id = gets.chomp.to_i #order_id_to_update 
-        order_id_check = Order.all.map { |x| x.id}
+        order_id_check = @all_orders.all.map { |x| x.id }
         puts ""
         puts "_________________________________________________________________________________________________________________________"
         if order_id_check.include?(order_id) == false
@@ -298,7 +297,7 @@ class CommandLineInterface
             puts ""
             
             product_id = gets.chomp.to_i #new_product_id
-            product_id_check = Order.all.map { |x| x.product_id}
+            product_id_check = Order.all.map { |x| x.product_id }
             if product_id_check.include?(product_id) == false
                 puts "_________________________________________________________________________________________________________________________"
                     puts ""
@@ -306,10 +305,11 @@ class CommandLineInterface
                     pid = fork{ exec "afplay", "lib/soundfile/Error-tone-sound-effect.mp3" }
                     puts ""
                     mainscreen 
+            else
+                o = @all_orders.find_by(id: order_id)
+                o.update(product_id: product_id)
+                o.save   
             end
-            o = @all_orders.find_by(id: order_id)
-            o.update(product_id: product_id)
-            o.save   
         end
 
 
